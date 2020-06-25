@@ -22,7 +22,7 @@ services:
     environment:
       - SPRING_DATASOURCE_URL=jdbc:postgresql://db:5432/task-tracker?useUnicode=true&characterEncoding=utf8&useSSL=false
     volumes:
-      - ./server/:/app/
+      - ./:/app/
     working_dir: /app
     user: appuser
     command: mvn clean spring-boot:run
