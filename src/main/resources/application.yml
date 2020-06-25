@@ -1,1 +1,7 @@
-
+spring:
+  profiles:
+    active: dev
+  datasource:
+    url: jdbc:postgresql://localhost:5432/task-tracker?useUnicode=true&characterEncoding=utf8&useSSL=false
+    username: taskTrackerUser
+    password: qwerty
