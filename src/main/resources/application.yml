@@ -8,3 +8,7 @@ spring:
   jpa:
     hibernate:
       ddl-auto: update
+
+jwt:
+  secret: taskTracker
+  validation-time: 2592000000
