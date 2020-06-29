@@ -4,6 +4,7 @@ import com.github.vitaliimak.TaskTracker.service.UserService;
 import com.github.vitaliimak.TaskTracker.service.dto.UserDto;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PutMapping;
@@ -31,5 +32,10 @@ public class UserController {
         return userService.updateUser(userDto)
                 .map(userDto1 -> ResponseEntity.ok().body(userDto))
                 .orElse(ResponseEntity.notFound().build());
+    }
+
+    @DeleteMapping("/{id}")
+    public void deleteUser(@PathVariable Long id) {
+        userService.deleteUser(id);
     }
 }
