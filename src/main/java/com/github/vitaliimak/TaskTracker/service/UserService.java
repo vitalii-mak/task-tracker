@@ -5,6 +5,8 @@ import com.github.vitaliimak.TaskTracker.repository.UserRepository;
 import com.github.vitaliimak.TaskTracker.service.dto.UserDto;
 import com.github.vitaliimak.TaskTracker.service.mapper.UserMapper;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
@@ -45,5 +47,10 @@ public class UserService {
 
     public void deleteUser(Long id) {
         userRepository.deleteById(id);
+    }
+
+    public Page<UserDto> getAllUsers(Pageable pageable) {
+        return userRepository.findAll(pageable)
+                .map(userMapper::userToUserDto);
     }
 }

@@ -3,6 +3,8 @@ package com.github.vitaliimak.TaskTracker.controller;
 import com.github.vitaliimak.TaskTracker.service.UserService;
 import com.github.vitaliimak.TaskTracker.service.dto.UserDto;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -25,6 +27,11 @@ public class UserController {
         return userService.getUserById(id)
                 .map(userDto -> ResponseEntity.ok().body(userDto))
                 .orElse(ResponseEntity.notFound().build());
+    }
+
+    @GetMapping
+    public ResponseEntity<Page<UserDto>> getAllUsers(Pageable pageable) {
+        return ResponseEntity.ok().body(userService.getAllUsers(pageable));
     }
 
     @PutMapping
