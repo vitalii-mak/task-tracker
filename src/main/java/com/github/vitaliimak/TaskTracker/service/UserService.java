@@ -2,6 +2,7 @@ package com.github.vitaliimak.TaskTracker.service;
 
 import com.github.vitaliimak.TaskTracker.model.User;
 import com.github.vitaliimak.TaskTracker.repository.UserRepository;
+import com.github.vitaliimak.TaskTracker.security.SecurityUtils;
 import com.github.vitaliimak.TaskTracker.service.dto.UserDto;
 import com.github.vitaliimak.TaskTracker.service.mapper.UserMapper;
 import lombok.RequiredArgsConstructor;
@@ -52,5 +53,10 @@ public class UserService {
     public Page<UserDto> getAllUsers(Pageable pageable) {
         return userRepository.findAll(pageable)
                 .map(userMapper::userToUserDto);
+    }
+
+    public User getCurrentUser() {
+        Optional<String> username = SecurityUtils.getCurrentUserEmail();
+        return username.map(s -> userRepository.findOneByEmailIgnoreCase(s).get()).orElse(null);
     }
 }
