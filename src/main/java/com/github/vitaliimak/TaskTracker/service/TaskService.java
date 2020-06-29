@@ -4,6 +4,7 @@ import com.github.vitaliimak.TaskTracker.model.Task;
 import com.github.vitaliimak.TaskTracker.model.User;
 import com.github.vitaliimak.TaskTracker.model.enumeration.TaskStatus;
 import com.github.vitaliimak.TaskTracker.repository.TaskRepository;
+import com.github.vitaliimak.TaskTracker.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -15,6 +16,7 @@ import java.util.Optional;
 @RequiredArgsConstructor
 public class TaskService {
     private final TaskRepository taskRepository;
+    private final UserRepository userRepository;
     private final UserService userService;
 
     public Task saveTask(Task task) {
@@ -43,5 +45,22 @@ public class TaskService {
 
     public void deleteTask(Long id) {
         taskRepository.deleteById(id);
+    }
+
+    public Optional<Task> changeTaskStatus(Long id, TaskStatus status) {
+        return taskRepository.findById(id)
+                .map(existedTask -> {
+                    existedTask.setStatus(status);
+                    return taskRepository.save(existedTask);
+                });
+    }
+
+    public Optional<Task> changeTaskUser(Long taskId, Long userId) {
+        return userRepository.findById(userId)
+                .flatMap(user -> taskRepository.findById(taskId)
+                        .map(existedTask -> {
+                            existedTask.setUser(user);
+                            return taskRepository.save(existedTask);
+                        }));
     }
 }

@@ -1,6 +1,7 @@
 package com.github.vitaliimak.TaskTracker.controller;
 
 import com.github.vitaliimak.TaskTracker.model.Task;
+import com.github.vitaliimak.TaskTracker.model.enumeration.TaskStatus;
 import com.github.vitaliimak.TaskTracker.service.TaskService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
@@ -13,6 +14,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import javax.validation.Valid;
@@ -44,7 +46,7 @@ public class TaskController {
     }
 
     @PutMapping
-    public ResponseEntity<Task> updateUser(@Valid @RequestBody Task task) {
+    public ResponseEntity<Task> updateTask(@Valid @RequestBody Task task) {
         return taskService.updateTask(task)
                 .map(existedTask -> ResponseEntity.ok().body(task))
                 .orElse(ResponseEntity.notFound().build());
@@ -53,5 +55,21 @@ public class TaskController {
     @DeleteMapping("{id}")
     public void deleteTask(@PathVariable Long id) {
         taskService.deleteTask(id);
+    }
+
+    @PutMapping("/status")
+    public ResponseEntity<Task> changeTaskStatus(@RequestParam Long taskId,
+                                                 @RequestParam("status") TaskStatus status) {
+        return taskService.changeTaskStatus(taskId, status)
+                .map(task -> ResponseEntity.ok().body(task))
+                .orElse(ResponseEntity.notFound().build());
+    }
+
+    @PutMapping("/user")
+    public ResponseEntity<Task> changeTaskUser(@RequestParam Long taskId,
+                                               @RequestParam("userId") Long userId) {
+        return taskService.changeTaskUser(taskId, userId)
+                .map(task -> ResponseEntity.ok().body(task))
+                .orElse(ResponseEntity.notFound().build());
     }
 }
