@@ -31,6 +31,15 @@ public class UserService {
 
     public Optional<UserDto> getUserById(Long id) {
         return userRepository.findById(id)
-                .map(user -> userMapper.userToUserDto(user));
+                .map(userMapper::userToUserDto);
+    }
+
+    public Optional<UserDto> updateUser(UserDto userDto) {
+        return userRepository.findOneByEmailIgnoreCase(userDto.getEmail())
+                .map(user -> {
+                    user.setFirstName(userDto.getFirstName());
+                    user.setLastName(userDto.getLastName());
+                    return userMapper.userToUserDto(userRepository.save(user));
+                });
     }
 }
