@@ -7,9 +7,12 @@ import com.github.vitaliimak.TaskTracker.repository.TaskRepository;
 import com.github.vitaliimak.TaskTracker.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
+import java.util.Locale;
 import java.util.Optional;
 
 @Service
@@ -30,8 +33,11 @@ public class TaskService {
         return taskRepository.findById(id);
     }
 
-    public Page<Task> getAllTasksByUserId(Long userId, Pageable pageable) {
-        return taskRepository.findAllTasksByUserId(userId, pageable);
+    public Page<Task> getAllTasksByUserId(Long userId, TaskStatus status, Pageable pageable) {
+        if (status == null) {
+            return taskRepository.findAllTasksByUserId(pageable, userId);
+        }
+        return taskRepository.findAllTasksByUserId(pageable, userId, status);
     }
 
     public Optional<Task> updateTask(Task task) {
@@ -62,5 +68,20 @@ public class TaskService {
                             existedTask.setUser(user);
                             return taskRepository.save(existedTask);
                         }));
+    }
+
+    public Page<Task> getAllTasks(int pageNumber, int pageSize, String sort, TaskStatus status) {
+        Pageable pageable;
+        Sort orders;
+        if (sort.toLowerCase(Locale.ENGLISH).equals("asc")) {
+            orders = Sort.by("user.id").ascending();
+        } else {
+            orders = Sort.by("user.id").descending();
+        }
+        pageable = PageRequest.of(pageNumber, pageSize, orders);
+        if (status == null) {
+            return taskRepository.findAll(pageable);
+        }
+        return taskRepository.findAll(pageable, status);
     }
 }

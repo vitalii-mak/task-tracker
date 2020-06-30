@@ -40,9 +40,23 @@ public class TaskController {
                 .orElse(ResponseEntity.notFound().build());
     }
 
+    @GetMapping
+    public ResponseEntity<Page<Task>> getAllTasks(
+            @RequestParam(name = "sort", required = false, defaultValue = "asc") String sort,
+            @RequestParam(name = "status", required = false, defaultValue = "") TaskStatus status,
+            @RequestParam(name = "pageNumber", required = false, defaultValue = "0") int pageNumber,
+            @RequestParam(name = "pageSize", required = false, defaultValue = "10") int pageSize,
+            Pageable pageable
+    ) {
+        return ResponseEntity.ok().body(taskService.getAllTasks(pageNumber, pageSize, sort, status));
+    }
+
     @GetMapping("/userId/{userId}")
-    public ResponseEntity<Page<Task>> getAllTasksByUserId(@PathVariable Long userId, Pageable pageable) {
-        return ResponseEntity.ok().body(taskService.getAllTasksByUserId(userId, pageable));
+    public ResponseEntity<Page<Task>> getAllTasksByUserId(
+            @PathVariable Long userId,
+            @RequestParam(name = "status", required = false, defaultValue = "") TaskStatus status,
+            Pageable pageable) {
+        return ResponseEntity.ok().body(taskService.getAllTasksByUserId(userId, status, pageable));
     }
 
     @PutMapping
