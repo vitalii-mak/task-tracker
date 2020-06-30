@@ -1,5 +1,7 @@
 # **Тестовое задание**
 
+Swagger url [http://localhost:8080/swagger-ui.html](http://localhost:8080/swagger-ui.html)
+
 Создать приложение Task Tracker с управлением задачами через API.
 
 ## Приложение должно содержать:
